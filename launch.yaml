@@ -20,6 +20,7 @@ resources:
     type: redis
     # yields:
     # - LB_cache_url
+    # - LB_cache_key_prefix
 phases:
   setup:
     - pip3 install -r app/requirements.txt
