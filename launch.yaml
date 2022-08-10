@@ -3,6 +3,8 @@ env:
     TEST_VAR: value1
     TEST_PORT: 3000
     DEBUG: true
+  # specific environments
+  # (builds on base)
   production:
     DEBUG: false
 resources:
@@ -10,6 +12,7 @@ resources:
     type: postgres
     # yields:
     # - LB_database_hostname
+    # - LB_database_port
     # - LB_database_name
     # - LB_database_username
     # - LB_database_password
@@ -28,7 +31,9 @@ routes:
     route: /
     django:
       manage: cms/manage.py
-      wsgi: cms.config.app:application
+      wsgi:
+        file: cms/config/app.py
+        var: application
   assets:
     route: /static/
     static:
@@ -40,4 +45,4 @@ workers:
     runtime: python3
     path: cms/jobs/sync-users.py
     schedule:
-      interval: 5h
+      interval: 4h
