@@ -45,94 +45,94 @@ class LBEnv:
 
 
 class LBDeployment:
-	def __init__(self, service_id, commit, status):
-		# Params
-		self.commit = commit
-		self.service_id = service_id
-		self.status = status
-		# Setup
-		self.path = f"services/{service_id}/{commit}/"
+    def __init__(self, service_id, commit, status):
+        # Params
+        self.commit = commit
+        self.service_id = service_id
+        self.status = status
+        # Setup
+        self.path = f"services/{service_id}/{commit}/"
 
-	@property
-	def active(self):
-		return self.status == "active"
+    @property
+    def active(self):
+        return self.status == "active"
 
 
 class LBService:
-	def __init__(self, identifier):
-		self.identifier = identifier
-		self.git_repo = "https://github.jpl.nasa.gov/18x/WCP"
-		self.git_branch = "develop"
-		self.deployments = []
+    def __init__(self, identifier):
+        self.identifier = identifier
+        self.git_repo = "https://github.jpl.nasa.gov/18x/WCP"
+        self.git_branch = "develop"
+        self.deployments = []
 
-	@property
-	def deployed(self):
-		for deployment in self.deployments:
-			if deployment.active:
-				return deployment
+    @property
+    def deployed(self):
+        for deployment in self.deployments:
+            if deployment.active:
+                return deployment
 
-	@property
-	def path(self):
-		if self.deployed:
-			return self.deployed.path
+    @property
+    def path(self):
+        if self.deployed:
+            return self.deployed.path
 
 
 class LBSite:
-	def __init__(self, identifier, service):
-		self.identifier = identifier
-		self.service = service
+    def __init__(self, identifier, service):
+        self.identifier = identifier
+        self.service = service
 
 
 class LBConfig:
-	def __init__(self, site):
-		# Params
-		self.site = site
-		# Setup
-		self.path = os.path.join(site.service.path, "launch.yaml")
-		self.data = self.load()
+    def __init__(self, site):
+        # Params
+        self.site = site
+        # Setup
+        self.path = os.path.join(site.service.path, "launch.yaml")
+        self.data = self.load()
 
-	def load(self):
-		if os.path.isfile(self.path):
-			with open(self.path, "r") as fd:
-				return yaml.safe_load(fd)
-		return {}
+    def load(self):
+        if os.path.isfile(self.path):
+            with open(self.path, "r") as fd:
+                return yaml.safe_load(fd)
+        return {}
 
-	@property
-	def env(self):
-		if env := self.data.get("env"):
-			# Environment
-			result = env.get("base", {})
-			if specific := env.get(LBEnv.type()):
-				result.update(specific)
-			# Resources
-			for name, config in self.resources.items():
-				for key, value in config["values"].items():
-					result[f"LB_{name}_{key}"] = value
-			return result
-		return {}
+    @property
+    def env(self):
+        if env := self.data.get("env"):
+            # Environment
+            result = env.get("base", {})
+            if specific := env.get(LBEnv.type()):
+                result.update(specific)
+            # Resources
+            for name, config in self.resources.items():
+                for key, value in config["values"].items():
+                    result[f"LB_{name}_{key}"] = value
+            return result
+        return {}
 
-	@property
-	def resources(self):
-		if resources := self.data.get("resources"):
-			for name, config in resources.items():
-				match config.get("type"):
-					case "postgres":
-						config["values"] = {
-							"hostname": "postgres.example.localhost",
-							"name": f"{self.site.identifier}_{name}",
-							"username": self.site.identifier,
-							"password": "example",
-							"port": 5342,
-						}
-					case "redis":
-						config["values"] = {
-							"url": "redis.example.localhost",
-							"prefix": f"{self.site.identifier}_{name}",
-						}
-					case _:
-						print(f"[LBConfig.resources]: Resource type not recognized")
-			return resources
-		return {}
+    @property
+    def resources(self):
+        if resources := self.data.get("resources"):
+            for name, config in resources.items():
+                match config.get("type"):
+                    case "postgres":
+                        config["values"] = {
+                            "hostname": "postgres.example.localhost",
+                            "name": f"{self.site.identifier}_{name}",
+                            "username": self.site.identifier,
+                            "password": "example",
+                            "port": 5342,
+                        }
+                    case "redis":
+                        config["values"] = {
+                            "url": "redis.example.localhost",
+                            "prefix": f"{self.site.identifier}_{name}",
+                        }
+                    case _:
+                        print(f"[LBConfig.resources]: Resource type not recognized")
+            return resources
+        return {}
 
 
 deployment1 = LBDeployment("wcp-wagtail", "f4e34db690308848c5e7ea4851c12d0daf49332b", "active")
