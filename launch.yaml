@@ -1,0 +1,43 @@
+env:
+  base:
+    TEST_VAR: value1
+    TEST_PORT: 3000
+    DEBUG: true
+  production:
+    DEBUG: false
+resources:
+  database:
+    type: postgres
+    # yields:
+    # - LB_database_hostname
+    # - LB_database_name
+    # - LB_database_username
+    # - LB_database_password
+  cache:
+    type: redis
+    # yields:
+    # - LB_cache_url
+phases:
+  setup:
+    - pip3 install -r app/requirements.txt
+  tenant:
+    - python3 manage.py migrate --noinput
+    - python3 manage.py update_index
+routes:
+  web:
+    route: /
+    django:
+      manage: cms/manage.py
+      wsgi: cms.config.app:application
+  assets:
+    route: /static/
+    static:
+      dir: cms/theme/static/
+      # or:
+      # file: cms/theme/static/example.png
+workers:
+  sync-users:
+    runtime: python3
+    path: cms/jobs/sync-users.py
+    schedule:
+      interval: 5h
