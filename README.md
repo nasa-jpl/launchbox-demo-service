@@ -1,4 +1,4 @@
-# launchbox-dev
+# Launchbox Architecture
 Development Repo for Launchbox
 
 ## Setup
