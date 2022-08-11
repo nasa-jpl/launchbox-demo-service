@@ -4,3 +4,6 @@ env_vars/
 
 services/*
 !services/.gitkeep
+
+venv
+.idea
