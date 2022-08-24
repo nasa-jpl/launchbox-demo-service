@@ -1,78 +1,81 @@
-import json
-
-import bottle
 import requests
 
-# Application
-app = application = bottle.Bottle()
-
-# Debugging
-bottle.debug(True)
+from util import LBEvent
 
 
-@app.get("/")
-def index():
-    manifest = {
-        "name": "Launchbox-Test",
-        "url": "http://wcpdev.jplweb.net:8001",
-        "hook_attributes": {
-            "url": "http://wcpdev.jplweb.net:8001/events",
-        },
-        "redirect_url": "http://wcpdev.jplweb.net:8001/redirect",
-        "callback_urls": [
-            "http://wcpdev.jplweb.net:8001/callback",
-        ],
-        "public": False,
-        "default_permissions": {
-            "contents": "read",
-        },
-        "default_events": [
-            "push",
-        ]
-    }
-    return f"""
-        <html>
-            <body>
-                <form action="https://github.com/settings/apps/new" method="POST">
-                    <input id="manifest" type="hidden" name="manifest">
-                    <input id="state" type="hidden" name="state" value="fejwaofejiwafjw">
-                    <input type="submit" value="Register">
-                </form>
-                <script>
-                    input = document.getElementById("manifest")
-                    input.value = JSON.stringify({json.dumps(manifest)})
-                </script>
-            </body>
-        </html>
-    """
+class LBGitHub:
+    # max 100
+    per_page = 30
 
-@app.route("/events")
-def events():
-    if body := bottle.request.body:
-        data = json.loads(body)
-        print(data)
-    return {"api": "launchbox"}
+    @staticmethod
+    def commits(repo_url, branch="", token=None):
+        if repo := LBGitHub.parse(repo_url):
+            if response := LBGitHub.API.request(
+                endpoint=LBGitHub.endpoint(repo, "repos", "commits"),
+                headers=LBGitHub.auth(token),
+                params={"per_page": LBGitHub.per_page, "sha": branch},
+            ):
+                return [{
+                    "sha": val["sha"],
+                    "date": val["commit"]["author"]["date"],
+                    "author": val["author"]["login"],
+                    "url": val["html_url"]
+                } for val in response]
+        else:
+            LBEvent.error("LBGitHub.commits", "Error parsing URL")
+            return False
 
-@app.get("/redirect")
-def redirect():
-    if code := bottle.request.params.get("code"):
-        print(f"Code: {code}")
-        response = requests.post(f"https://api.github.com/app-manifests/{code}/conversions")
-        if response.status_code == 201:
-            data = response.json()
-            print(data)
-            return data
+    @staticmethod
+    def parse(url):
+        # Start
+        for prefix in ["http://", "https://", "git@"]:
+            if url.startswith(prefix):
+                url = url[len(prefix):]
+        # End
+        if url.endswith(".git"):
+            url = url[:-4]
+        # Split
+        parts = url.split("/")
+        if len(parts) >= 3:
+            # Params
+            base_url = parts[0]
+            owner = parts[1]
+            name = parts[2]
+            # Check
+            if base_url == "github.com":
+                base_url = f"api.{base_url}"
+            else:
+                base_url = f"{base_url}/api/v3"
+            # Result
+            return {
+                "base_url": base_url,
+                "owner": owner,
+                "name": name,
+            }
 
-@app.get("/callback")
-def callback():
-    print(bottle.request.body)
-    return {"endpoint": "callback"}
+    @staticmethod
+    def auth(token):
+        return {"Authorization": f"token {token}"} if token else {}
 
+    @staticmethod
+    def endpoint(repo, parent, child):
+        return f"https://{repo['base_url']}/{parent}/{repo['owner']}/{repo['name']}/{child}"
 
-if __name__ == "__main__":
-    # Run webserver
-    bottle.run(
-        app=app,
-        host="0.0.0.0",
-        port=8001,
-    )
+    class API:
+        @staticmethod
+        def request(endpoint, headers, params):
+            try:
+                response = requests.get(
+                    endpoint,
+                    headers=headers,
+                    params=params,
+                    timeout=15,
+                )
+                if response.status_code == 200:
+                    return response.json()
+                else:
+                    LBEvent.error("LBGitHub.API", f"[{response.status_code}] {response.reason}")
+                    return False
+            except Exception as e:
+                LBEvent.error("LBGitHub.API", e)
+                return False

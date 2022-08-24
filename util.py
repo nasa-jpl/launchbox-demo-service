@@ -1,5 +1,9 @@
+import datetime
 import os
 import subprocess
+import sys
+
+import termcolor
 
 
 class LBCommand:
@@ -55,3 +59,46 @@ class LBEnv:
             # line2 = "Please add ENVIRONMENT=local to your .env file."
             # WCPEvent.warn("LBEnv", f"{line1} {line2}")
             return "local"
+
+
+class LBEvent:
+    # Specify log output colors
+    colors = {
+        "complete": "green",
+        "error": "red",
+        "event": "blue",
+        "exit": "red",
+        "warn": "yellow",
+    }
+
+    @staticmethod
+    def date():
+        return datetime.datetime.now().strftime("%m/%d/%y %H:%M:%S %p")
+
+    @staticmethod
+    def format(source, message, kind):
+        color = LBEvent.colors[kind]
+        line1 = f"* {source} [{LBEvent.date()}]"
+        line2 = f"- [{kind.capitalize()}]: {message}"
+        return "\n".join([termcolor.colored(line, color) for line in [line1, line2]])
+
+    @staticmethod
+    def complete(source, message):
+        print(LBEvent.format(source, message, "complete"))
+
+    @staticmethod
+    def log(source, message):
+        print(LBEvent.format(source, message, "event"))
+
+    @staticmethod
+    def error(source, e):
+        message = e if type(e) == str else repr(e)
+        print(LBEvent.format(source, message, "error"))
+
+    @staticmethod
+    def exit(source, message):
+        sys.exit(LBEvent.format(source, message, "exit"))
+
+    @staticmethod
+    def warn(source, message):
+        print(LBEvent.format(source, message, "warn"))
