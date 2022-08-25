@@ -91,7 +91,6 @@ class LBGitHub:
                 params={"per_page": LBGitHub.per_page, "sha": branch},
                 timeout=15,
             ):
-                print(LBGitHub.endpoint(repo, resource))
                 # Results
                 if response.status_code == 200:
                     return response.json()
