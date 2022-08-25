@@ -29,7 +29,7 @@ class LBGitHub:
             } for val in response]
 
     @staticmethod
-    def repos(url, token=None):
+    def repo(url, token=None):
         if response := LBGitHub.query(url, token=token):
             return {
                 "name": response["name"],
