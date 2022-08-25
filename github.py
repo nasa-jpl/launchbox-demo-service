@@ -91,12 +91,16 @@ class LBGitHub:
                 params={"per_page": LBGitHub.per_page, "sha": branch},
                 timeout=15,
             ):
+                print(LBGitHub.endpoint(repo, resource))
                 # Results
                 if response.status_code == 200:
                     return response.json()
                 else:
-                    LBEvent.error("LBGitHub.API", f"[{response.status_code}] {response.reason}")
+                    LBEvent.error("LBGitHub.query", f"[{response.status_code}] {response.reason}")
                     return False
+            else:
+                LBEvent.error("LBGitHub.query", "Response Error")
+                return False
         else:
-            LBEvent.error("LBGitHub.query", "Error parsing URL")
+            LBEvent.error("LBGitHub.query", "Parse Error")
             return False
