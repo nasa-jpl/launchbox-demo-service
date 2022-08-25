@@ -6,7 +6,6 @@ from util import LBEvent
 class LBGitHub:
     # max 100
     per_page = 30
-    timeout = 15
 
     @staticmethod
     def branches(url, token=None):
@@ -90,7 +89,7 @@ class LBGitHub:
                 LBGitHub.endpoint(repo, resource),
                 headers=LBGitHub.auth(token),
                 params={"per_page": LBGitHub.per_page, "sha": branch},
-                timeout=LBGitHub.timeout,
+                timeout=15,
             ):
                 # Results
                 if response.status_code == 200:
