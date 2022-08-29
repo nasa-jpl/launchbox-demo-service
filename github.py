@@ -9,9 +9,7 @@ class LBGitHub:
 
     @staticmethod
     def branches(url, token=None):
-        # Call
         if response := LBGitHub.query(url, resource="branches", token=token):
-            # Results
             return [{
                 "name": val["name"],
                 "sha": val["commit"]["sha"],
@@ -19,8 +17,8 @@ class LBGitHub:
             } for val in response]
 
     @staticmethod
-    def commits(url, branch="", token=None):
-        if response := LBGitHub.query(url, branch, "commits", token):
+    def commits(url, branch=None, token=None):
+        if response := LBGitHub.query(url, branch=branch, resource="commits", token=token):
             return [{
                 "sha": val["sha"],
                 "date": val["commit"]["author"]["date"],
@@ -42,7 +40,7 @@ class LBGitHub:
             }
 
     @staticmethod
-    def parse(url):
+    def clean(url):
         # Start
         for prefix in ["http://", "https://", "git@"]:
             if url.startswith(prefix):
@@ -50,23 +48,20 @@ class LBGitHub:
         # End
         if url.endswith(".git"):
             url = url[:-4]
+        # Result
+        return url
+
+    @staticmethod
+    def parse(url):
         # Split
+        url = LBGitHub.clean(url)
         parts = url.split("/")
         if len(parts) >= 3:
-            # Params
-            base_url = parts[0]
-            owner = parts[1]
-            name = parts[2]
-            # Check
-            if base_url == "github.com":
-                base_url = f"api.{base_url}"
-            else:
-                base_url = f"{base_url}/api/v3"
             # Result
             return {
-                "base_url": base_url,
-                "owner": owner,
-                "name": name,
+                "url": parts[0],
+                "owner": parts[1],
+                "name": parts[2],
             }
 
     @staticmethod
@@ -75,20 +70,26 @@ class LBGitHub:
 
     @staticmethod
     def endpoint(repo, resource):
-        endpoint = f"https://{repo['base_url']}/repos/{repo['owner']}/{repo['name']}"
+        # Check
+        if repo['url'] == "github.com":
+            base_url = f"api.{repo['url']}"
+        else:
+            base_url = f"{repo['url']}/api/v3"
+        # Result
+        endpoint = f"https://{base_url}/repos/{repo['owner']}/{repo['name']}"
         if resource:
             endpoint += f"/{resource}"
         return endpoint
 
     @staticmethod
-    def query(url, branch="", resource="", token=None):
+    def query(url, branch=None, resource=None, token=None):
         # Parse
         if repo := LBGitHub.parse(url):
             # Call
             if response := requests.get(
                 LBGitHub.endpoint(repo, resource),
                 headers=LBGitHub.auth(token),
-                params={"per_page": LBGitHub.per_page, "sha": branch},
+                params={"per_page": LBGitHub.per_page, "sha": branch or ""},
                 timeout=15,
             ):
                 # Results
