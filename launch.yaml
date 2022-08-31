@@ -6,17 +6,28 @@ env:
   production:
     DEBUG: false
 resources:
-  database:
+  database1:
     type: postgres
     # yields:
-    # - LB_database_hostname
-    # - LB_database_name
-    # - LB_database_username
-    # - LB_database_password
+    # - LB_database1_type
+    # - LB_database1_hostname
+    # - LB_database1_name
+    # - LB_database1_username
+    # - LB_database1_password
   cache:
     type: redis
     # yields:
+    # - LB_cache_type
     # - LB_cache_url
+  storage:
+    type: s3
+    # yields:
+    # - LB_storage_type
+    # - LB_storage_region
+    # - LB_storage_bucket
+    # - LB_storage_folder
+    # - LB_storage_access_key_id
+    # - LB_storage_secret_access_key
 phases:
   setup:
     - pip3 install -r app/requirements.txt

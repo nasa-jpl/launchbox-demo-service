@@ -2,7 +2,7 @@ import os
 import subprocess
 
 
-class LBCommand:
+class LBCLI:
     @staticmethod
     def run(args, cwd=None, setenv={}, stdin=None, output=False):
         # Extend existing environment variables
@@ -11,7 +11,7 @@ class LBCommand:
         # Check stdin (invalid stdin can cause commands that expect it to hang)
         if stdin is not None:
             if type(stdin) is not bytes:
-                # WCPEvent.warn("WCPCommand", "Unable to run command: stdin value must use byte format")
+                # WCPEvent.warn("LBCLI", "Unable to run command: stdin value must use byte format")
                 return False
         return subprocess.run(args, cwd=cwd, env=env, input=stdin, capture_output=output)
 
