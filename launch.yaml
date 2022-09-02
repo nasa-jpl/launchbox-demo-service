@@ -42,23 +42,21 @@ routes:
     route: /
     type: wsgi
     options:
-      file: app/api.py
+      path: app/api.py
       var: app
   pages:
     route: /pages/
     type: static
     options:
-      dir: pages
+      path: pages
   assets:
-    route: /static/
+    route: /static/data.json
     type: static
     options:
-      dir: static
-      # or:
-      # file: cms/theme/static/example.png
+      path: static/data.json
 workers:
   sync-users:
-    runtime: python3
-    path: cms/jobs/sync-users.py
-    schedule:
+    type: python3
+    options:
+      path: cms/jobs/sync-users.py
       interval: 4h
