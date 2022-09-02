@@ -7,9 +7,6 @@ import bottle
 app = bottle.Bottle()
 version = 1.0
 
-# Debugging
-bottle.debug(LBEnv.local())
-
 # Index
 @app.get("/")
 def index():
