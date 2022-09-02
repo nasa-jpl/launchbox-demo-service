@@ -35,20 +35,25 @@ phases:
   setup:
     - pip3 install -r requirements.txt
   tenant:
-    - python3 manage.py migrate --noinput
-    - python3 manage.py update_index
+    # - python3 manage.py migrate --noinput
+    # - python3 manage.py update_index
 routes:
-  web:
+  api:
     route: /
-    django:
-      manage: cms/manage.py
-      wsgi:
-        file: cms/config/app.py
-        var: application
+    type: wsgi
+    options:
+      file: app/api.py
+      var: app
+  pages:
+    route: /pages/
+    type: static
+    options:
+      dir: pages
   assets:
     route: /static/
-    static:
-      dir: cms/theme/static/
+    type: static
+    options:
+      dir: static
       # or:
       # file: cms/theme/static/example.png
 workers:
