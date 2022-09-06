@@ -16,6 +16,7 @@ def index():
     return {
         "api": "lb",
         "env": os.environ["ENVIRONMENT"],
+        "site": os.environ["SITE_ID"],
         "type": "demo",
         "version": version,
     }
