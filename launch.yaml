@@ -57,7 +57,7 @@ routes:
       path: static/data.json
 workers:
   sync-users:
-    type: python3
+    runtime: python3
     options:
       path: cms/jobs/sync-users.py
       interval: 4h
