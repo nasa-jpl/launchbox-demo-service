@@ -16,12 +16,13 @@ def index():
     return {
         "api": "lb",
         "env": os.environ["ENVIRONMENT"],
+        "service": os.environ["SERVICE_ID"],
         "site": os.environ["SITE_ID"],
         "type": "demo",
         "version": version,
     }
 
-# Resources
-@app.get("/resources")
+# Env vars
+@app.get("/vars")
 def index():
-    return {key: value for key, value in os.environ.items() if key.startswith("LB_")}
+    return os.environ.copy()
