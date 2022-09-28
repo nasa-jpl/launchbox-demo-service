@@ -34,7 +34,7 @@ resources:
 phases:
   setup:
     - pip3 install -r requirements.txt
-  tenant:
+#   tenant:
     # - python3 manage.py migrate --noinput
     # - python3 manage.py update_index
 routes:
