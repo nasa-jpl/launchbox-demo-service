@@ -35,8 +35,6 @@ phases:
   setup:
     - pip3 install -r requirements.txt
   tenant:
-    - echo $LB_SITE_ID
-    - "echo $LB_SITE_ID"
     # - python3 manage.py migrate --noinput
     # - python3 manage.py update_index
 routes:
