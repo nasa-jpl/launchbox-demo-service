@@ -18,6 +18,7 @@ def index():
         "env": os.environ["ENVIRONMENT"],
         "service": os.environ.get("LB_SERVICE_ID", False),
         "site": os.environ.get("LB_SITE_ID", False),
+        "test": "example",
         "type": "demo",
         "version": version,
     }
