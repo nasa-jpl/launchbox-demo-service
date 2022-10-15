@@ -1,9 +1,50 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
-        <title>Launchbox</title>
+        <title>Launchbox Demo</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
     </head>
     <body>
-        <h1>Launchbox</h1>
-        <p>Testing page</p>
+        <h1>Welcome to Launchbox</h1>
+        <p>
+            This is a site powered by the Launchbox Demo Service.
+            If you've just installed Launchbox for the first time,
+            seeing this means that everything is working as expected!
+        </p>
+        <p>
+            This demo has three components that are configured using the <code>routes</code> section of the <code>launch.yaml</code> file:
+        </p>
+        <ul>
+            <li>
+                 This page is made available by the <code>pages</code> route, defined in the <code>launch.yaml</code> file with:
+                <pre>
+<code class="language-yaml">pages:
+  route: /
+  type: static
+  options:
+    path: pages</code></pre>
+            </li>
+            <li>
+                <a href="/api/">Sample Python API endpoint</a>, made available by the <code>api</code> route, defined in the <code>launch.yaml</code> file with:
+                <pre>
+<code class="language-yaml">api:
+  route: /api/
+  type: wsgi
+  options:
+    path: app/api.py
+    var: app</code></pre>
+            </li>
+            <li>
+                <a href="/static/data.json">Sample static JSON endpoint</a>, made available by the <code>assets</code> route, defined in the <code>launch.yaml</code> file with:
+                <pre>
+<code class="language-yaml">assets:
+  route: /static/data.json
+  type: static
+  options:
+    path: static/data.json</code></pre>
+            </li>
+        </ul>
+        <script>hljs.highlightAll();</script>
     </body>
 </html>

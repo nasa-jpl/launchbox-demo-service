@@ -7,56 +7,25 @@ env:
   # (builds on base)
   production:
     DEBUG: false
-resources:
-  database1:
-    type: postgres
-    # yields:
-    # - LB_database1_type
-    # - LB_database1_hostname
-    # - LB_database1_name
-    # - LB_database1_username
-    # - LB_database1_password
-  cache:
-    type: redis
-    # yields:
-    # - LB_cache_type
-    # - LB_cache_url
-    # - LB_cache_key_prefix
-  storage:
-    type: s3
-    # yields:
-    # - LB_storage_type
-    # - LB_storage_region
-    # - LB_storage_bucket
-    # - LB_storage_folder
-    # - LB_storage_access_key_id
-    # - LB_storage_secret_access_key
 phases:
   setup:
     - pip3 install -r requirements.txt
-#   tenant:
-    # - python3 manage.py migrate --noinput
-    # - python3 manage.py update_index
+  tenant:
+    - echo "Initializing Launchbox Demo"
 routes:
-  api:
+  pages:
     route: /
+    type: static
+    options:
+      path: pages
+  api:
+    route: /api/
     type: wsgi
     options:
       path: app/api.py
       var: app
-  pages:
-    route: /pages/
-    type: static
-    options:
-      path: pages
   assets:
     route: /static/data.json
     type: static
     options:
       path: static/data.json
-workers:
-  sync-users:
-    runtime: python3
-    options:
-      path: cms/jobs/sync-users.py
-      interval: 4h
