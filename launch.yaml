@@ -19,7 +19,7 @@ routes:
     options:
       path: pages
   api:
-    route: /api/
+    route: /api
     type: wsgi
     options:
       path: app/api.py

@@ -10,7 +10,7 @@ version = 1.0
 bottle.debug(False)
 
 # Index
-@app.get("/")
+@app.get("/api")
 def index():
     return {
         "api": "lb",
@@ -23,6 +23,6 @@ def index():
     }
 
 # Env vars
-@app.get("/vars")
+@app.get("/api/vars")
 def index():
     return os.environ.copy()
