@@ -17,8 +17,11 @@
                     </span>
                 </h1>
                 <p class="mt-2 text-center text-xl leading-8 text-gray-500">
-                    This site is powered by the Launchbox <a class="text-blue-600" href="https://github.com/nasa-jpl/launchbox-dev" target="_blank">Demo Service</a>.
-                    <svg class="mx-auto my-4 w-10 h-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    This site is powered by the Launchbox <a class="text-blue-500" href="https://github.com/nasa-jpl/launchbox-dev" target="_blank">Demo Service</a>.
+                </p>
+                <hr class="my-8">
+                <p class="mt-2 text-center text-xl leading-8 text-gray-500">
+                    <svg class="mx-auto my-4 w-10 h-10" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     If you've just installed Launchbox for the first time,
@@ -26,18 +29,18 @@
                     seeing this means that everything is working as expected!
                 </p>
                 <hr class="my-8">
-                <h1 class="text-2xl font-semibold text-gray-700">
+                <h1 class="text-2xl font-semibold text-gray-900">
                     Routes
                 </h1>
-                <p class="mt-2 text-lg leading-8 text-gray-500">
+                <p class="mt-2 text-lg leading-8 text-gray-700">
                     The <b>launch.yaml</b> file for this service defines three routes:
                 </p>
-                <div class="bg-black mt-4 rounded-lg">
+                <div class="bg-white mt-4 border border-gray-400 rounded-lg">
                     <div class="px-6 py-4">
-                        <h2 class="text-xl font-medium text-gray-200">
+                        <h2 class="text-xl font-medium text-gray-700">
                             route: <b>pages</b>
                         </h2>
-                        <p class="leading-8 text-base font-light text-gray-400">
+                        <p class="leading-8 text-base font-light text-gray-500">
                             This static route serves files from a directory.
                         </p>
                     </div>
@@ -52,17 +55,17 @@
                         </div>
                     </div>
                     <div class="px-6 py-4">
-                        <p class="leading-8 text-base font-semibold text-gray-400 -mt-2">
+                        <p class="leading-8 text-base font-medium text-gray-500 -mt-2">
                             Used by: this page
                         </p>
                     </div>
                 </div>
-                <div class="bg-black mt-4 rounded-lg">
+                <div class="bg-white mt-4 border border-gray-400 rounded-lg">
                     <div class="px-6 py-4">
-                        <h2 class="text-xl font-medium text-gray-200">
+                        <h2 class="text-xl font-medium text-gray-700">
                             route: <b>api</b>
                         </h2>
-                        <p class="leading-8 text-base font-light text-gray-400">
+                        <p class="leading-8 text-base font-light text-gray-500">
                             This WSGI route serves a python3 bottle app.
                         </p>
                     </div>
@@ -78,17 +81,17 @@
                         </div>
                     </div>
                     <div class="px-6 py-4">
-                        <p class="leading-8 text-base font-semibold text-gray-400 -mt-2">
-                            Used by: the <a class="text-blue-600" href="/api">sample API</a>
+                        <p class="leading-8 text-base font-medium text-gray-500 -mt-2">
+                            Used by: the <a class="text-blue-500" href="/api">sample API</a>
                         </p>
                     </div>
                 </div>
-                <div class="bg-black mt-4 rounded-lg">
+                <div class="bg-white mt-4 border border-gray-400 rounded-lg">
                     <div class="px-6 py-4">
-                        <h2 class="text-xl font-medium text-gray-200">
+                        <h2 class="text-xl font-medium text-gray-700">
                             route: <b>assets</b>
                         </h2>
-                        <p class="leading-8 text-base font-light text-gray-400">
+                        <p class="leading-8 text-base font-light text-gray-500">
                             This static route serves a specific JSON file.
                         </p>
                     </div>
@@ -103,8 +106,8 @@
                         </div>
                     </div>
                     <div class="px-6 py-4">
-                        <p class="leading-8 text-base font-semibold text-gray-400 -mt-2">
-                            Used by: the static <a class="text-blue-600" href="/static/data.json">JSON endpoint</a>
+                        <p class="leading-8 text-base font-medium text-gray-500 -mt-2">
+                            Used by: the static <a class="text-blue-500" href="/static/data.json">JSON endpoint</a>
                         </p>
                     </div>
                 </div>
